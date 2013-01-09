@@ -1,3 +1,5 @@
+(function(Backbone, _){
+	
 var origSync = Backbone.sync;
 
 var Helpers = {
@@ -51,6 +53,21 @@ var Helpers = {
 };
 
 
+function inherit(Parent, Child, mixins) {
+	var Func = function() {};
+	Func.prototype = Parent.prototype;
+
+	mixins || (mixins = [])
+	mixins.forEach(function(mixin) {
+		_.extend(Func.prototype, mixin);
+	});
+
+	Child.prototype = new Func();
+	Child.prototype.constructor = Child;
+
+	return _.extend(Child, Parent);
+};
+    
 Backbone.sync = function(method, model, options) {
 	var backend = model.backend || (model.collection && model.collection.backend);
 	
@@ -109,3 +126,7 @@ Backbone.Model = (function(Parent) {
 	// Inherit everything else from the parent
 	return inherit(Parent, Child, [Helpers]);
 })(Backbone.Model);
+
+return Backbone;
+
+})(Backbone, _);
