@@ -103,7 +103,10 @@ Backbone.Collection = (function(Parent) {
 	
     var Child = function() {
 		if (this.backend) {
-			this.backend = buildBackend(this);
+			this.backend = crudr.subscribe({
+				el : this,
+				name : this.backend
+			});
 		}
 		
 		Parent.apply(this, arguments);
@@ -117,7 +120,10 @@ Backbone.Model = (function(Parent) {
 	// Override the parent constructor
 	var Child = function() {
 		if (this.backend) {                
-			this.backend = buildBackend(this);
+			this.backend = crudr.subscribe({
+				el : this,
+				name : this.backend
+			});
 		}
 		
 		Parent.apply(this, arguments);
