@@ -1,5 +1,5 @@
 {
-  "name": "Backbone CRUDr",
+  "name": "backbone-crudr",
   "version": "0.4.0",
   "main": ["./backbone.crudr.js"],
   "dependencies": { "backbone", "underscore" }
