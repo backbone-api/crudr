@@ -68,6 +68,36 @@ function inherit(Parent, Child, mixins) {
 	return _.extend(Child, Parent);
 };
 
+function extend(Parent) {
+	// Override the parent constructor
+
+	var Child = function() {
+		if (this.backend) {
+			this.backend = crudr.subscribe({
+				el : this,
+				name : this.backend
+			});
+		}
+
+		Parent.apply(this, arguments);
+	};
+
+	// setup events
+	Child.prototype.initialize =  function( options ) {
+		options = options || {};
+		// Setup default backend bindings
+		// (see lib/client.js for details).
+		if (this.backend) {
+			this.bindBackend();
+		}
+		//
+		return Parent.prototype.initialize(this, options);
+	}
+
+	// Inherit everything else from the parent
+	return inherit(Parent, Child, [Helpers]);
+};
+
 Backbone.sync = function(method, model, options) {
 	var backend = model.backend || (model.collection && model.collection.backend);
 
@@ -99,40 +129,9 @@ Backbone.sync = function(method, model, options) {
 	}
 };
 
-Backbone.Collection = (function(Parent) {
-	// Override the parent constructor
+Backbone.Collection = (extend)(Backbone.Collection);
 
-	var Child = function() {
-		if (this.backend) {
-			this.backend = crudr.subscribe({
-				el : this,
-				name : this.backend
-			});
-		}
-
-		Parent.apply(this, arguments);
-	};
-
-	// Inherit everything else from the parent
-	return inherit(Parent, Child, [Helpers]);
-})(Backbone.Collection);
-
-Backbone.Model = (function(Parent) {
-	// Override the parent constructor
-	var Child = function() {
-		if (this.backend) {
-			this.backend = crudr.subscribe({
-				el : this,
-				name : this.backend
-			});
-		}
-
-		Parent.apply(this, arguments);
-	};
-
-	// Inherit everything else from the parent
-	return inherit(Parent, Child, [Helpers]);
-})(Backbone.Model);
+Backbone.Model = (extend)(Backbone.Model);
 
 return Backbone;
 
