@@ -77,22 +77,12 @@ function extend(Parent) {
 				el : this,
 				name : this.backend
 			});
+			// setup events
+			this.bindBackend();
 		}
 
 		Parent.apply(this, arguments);
 	};
-
-	// setup events
-	Child.prototype.initialize =  function( options ) {
-		options = options || {};
-		// Setup default backend bindings
-		// (see lib/client.js for details).
-		if (this.backend) {
-			this.bindBackend();
-		}
-		//
-		return Parent.prototype.initialize(this, options);
-	}
 
 	// Inherit everything else from the parent
 	return inherit(Parent, Child, [Helpers]);
