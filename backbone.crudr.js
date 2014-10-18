@@ -103,7 +103,7 @@ Backbone.sync = function(method, model, options) {
 		// Use CRUDr backend
 		backend.ready(function() {
 			var req = {
-				backend: backend.name,
+				name: backend.name,
 				method: method,
 				model: model.toJSON(),
 				options: options
