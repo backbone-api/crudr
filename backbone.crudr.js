@@ -91,8 +91,8 @@ function extend(Parent) {
 Backbone.sync = function(method, model, options) {
 	var backend = model.backend || (model.collection && model.collection.backend);
 
-	if (backend) {
-
+	if(backend && backend.ready ) {
+		// we have sockets...
 		var error = options.error || function() {};
 		var success = options.success || function() {};
 
@@ -113,7 +113,13 @@ Backbone.sync = function(method, model, options) {
 
 		});
 
+	} else if( backend ) {
+		// edge case when the sync is loaded before the initialization of the backend is complete
+		setTimeout(function(){
+			Backbone.sync(method, model, options);
+		}, 200);
 	} else {
+		// no sockets...
 		// Call the original Backbone.sync
 		origSync(method, model, options);
 	}
